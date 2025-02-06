@@ -4,20 +4,20 @@ import { Proposal } from "../types";
 export class ReadOnlySnapshotClient {
     instance: AxiosInstance;
 
-    constructor() {
+    constructor(overrideUrl?: string) {
         // Creating the axios instance with the base URL injected
-        this.instance = axios.create({ baseURL: 'https://hub.snapshot.org/graphql' });
+        this.instance = axios.create({ baseURL: overrideUrl || 'https://hub.snapshot.org/graphql' });
     }
 
-    async getProposalsFromSnapshotSpace(space: string): Promise<Proposal[]> {
-        const response = await this.instance.post({
+    async getProposalsFromSnapshotSpace(spaces: string[]): Promise<Proposal[]> {
+        const response = await this.instance.post('', {
             query: `
                 query {
                     proposals (
                         first: 20,
                         skip: 0,
                         where: {
-                            space_in: ["${space}"]
+                            space_in: ${JSON.stringify(spaces)}
                         },
                         orderBy: "created",
                         orderDirection: desc
@@ -34,6 +34,10 @@ export class ReadOnlySnapshotClient {
                         scores_total
                         scores_updated
                         author
+                        space {
+                            id
+                            name
+                        }
                     }
                 }
             `,

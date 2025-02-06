@@ -15,7 +15,7 @@ export async function validateSnapshotConfig(
             SNAPSHOT_ENS_NAME:
                 runtime.getSetting("SNAPSHOT_ENS_NAME") ||
                 process.env.SNAPSHOT_ENS_NAME,
-        };
+        }; // todo - allow for multiple spaces
 
         return snapshotEnvSchema.parse(config);
     } catch (error) {

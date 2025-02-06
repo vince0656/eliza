@@ -11,4 +11,8 @@ export interface Proposal {
     scores_total: number;
     scores_updated: number;
     author: string;
+    space: {
+        id: string;
+        name: string;
+    };
 }
