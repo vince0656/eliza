@@ -1,8 +1,8 @@
 import { Plugin } from "@elizaos/core";
 import { snapshotProposalsProvider } from "./providers/snapshotProposals";
+import { SnapshotAPI } from "./api/SnapshotAPI";
 
-// TODO - similar exports
-//export { WalletProvider, transferToken as TransferSuiToken };
+export { snapshotProposalsProvider, SnapshotAPI };
 
 export const snapshotPlugin: Plugin = {
     name: "snapshot",

@@ -1,6 +1,5 @@
 import {
-    //elizaLogger,
-    //Service,
+    elizaLogger,
     IAgentRuntime,
     Memory,
     Provider,
@@ -8,7 +7,7 @@ import {
 } from "@elizaos/core";
 
 import { validateSnapshotConfig } from "../enviroment";
-import { ReadOnlySnapshotClient } from "../clients/ReadOnlySnapshotClient";
+import { SnapshotAPI } from "../api/SnapshotAPI";
 
 const snapshotProposalsProvider: Provider = {
     get: async (
@@ -18,11 +17,13 @@ const snapshotProposalsProvider: Provider = {
     ): Promise<string | null> => {
         try {
             const config = await validateSnapshotConfig(runtime);
-            const client = new ReadOnlySnapshotClient();
-            const proposals = await client.getProposalsFromSnapshotSpace(config.space);
-            return client.formatLatestProposalsData(proposals);
+            const api = new SnapshotAPI(config.SNAPSHOT_API_BASE_URL ?? undefined);
+            const spaces = config.SNAPSHOT_ENS_NAMES;
+            const proposals = await api.getProposalsFromSnapshotSpace(spaces.split(","));
+            elizaLogger.info(`Fetched proposals from snapshot spaces ${spaces} and found ${proposals.length} proposals`);
+            return api.formatLatestProposalsData(proposals);
         } catch (error) {
-            console.error("Error in proposals provider:", error);
+            elizaLogger.error("Error in proposals provider:", error);
             return null;
         }
     },
